@@ -209,14 +209,20 @@ try {
         #-----------------
         # FROM 開始行取得
         #-----------------
+        '----------------------'
         $f_row = $Fsheet.Range($CSV.Frow).Row
+        $f_col = $Fsheet.Range($CSV.Frow).Column
         "  From 開始行: $f_row"
+        "  From 開始列: $f_col"
 
         #-----------------
         # TO 開始行取得
         #-----------------
         $t_row = $Tsheet.Range($CSV.Trow).Row
-        "  To 開始行: $t_row"
+        $t_col = $Tsheet.Range($CSV.Trow).Column
+        "  To   開始行: $t_row"
+        "  To   開始行: $t_col"
+        '----------------------'
 
         #-----------------
         # 転記
@@ -228,9 +234,11 @@ try {
             $fromto = $csv_arr[$r] -split ">"
 
             $from_col = $fromto[0]
-            $to_col = $fromto[1]
-            "   From 列：$from_col"
-            "     To 列：$to_col"
+            $to_col   = $fromto[1]
+
+           $Tsheet.Range( "$to_col$t_row") = $Fsheet.Range( "$from_col$f_row").Text
+#          $Fsheet.Range( "$from_col$f_row").Text
+
             '--------------------'
         }
 
@@ -238,7 +246,7 @@ try {
         # EXCEL クローズ
         #-----------------
         '■EXCELクローズ'
-        . CloseEXCEL
+        CloseEXCEL
 
         $i++
     }
