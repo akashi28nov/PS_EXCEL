@@ -107,7 +107,7 @@ $dat_end_no   = $CSV_Header.Count -1
 #-----------------
 #$CSV_dat    = $CSV_list | ConvertFrom-Csv -Delimiter `t 
 $CSV_dat    = $CSV_list | ConvertFrom-Csv -Delimiter `t 
-'CSV dat:'
+'--- CSV dat: ---'
 $CSV_dat
 
 '■ =================================='
@@ -227,19 +227,25 @@ try {
         #-----------------
         # 転記
         #-----------------
-        '■転記'
-        for( $r = $dat_start_no ; $r -le $dat_end_no; $r++)
+        # $f_row = $Fsheet.Range($CSV.Frow).Row
+        # $f_col = $Fsheet.Range($CSV.Frow).Column
+        while ( $Fsheet.Cells( $f_row, $f_col ).Text -ne "" )
         {
-            "転記列： $($csv_arr[$r])"
-            $fromto = $csv_arr[$r] -split ">"
+            "■行処理 $($CSV.Frow):  $f_row"
 
-            $from_col = $fromto[0]
-            $to_col   = $fromto[1]
+            '■列処理'
+            for( $r = $dat_start_no ; $r -le $dat_end_no; $r++)
+            {
+                $fromto = $csv_arr[$r] -split ">"
+                $from_col = $fromto[0]
+                $to_col   = $fromto[1]
 
-           $Tsheet.Range( "$to_col$t_row") = $Fsheet.Range( "$from_col$f_row").Text
-#          $Fsheet.Range( "$from_col$f_row").Text
-
+                "転記列： $($csv_arr[$r]) / data: $($Fsheet.Range( "$from_col$f_row").Text)"
+                $Tsheet.Range( "$to_col$t_row") = $Fsheet.Range( "$from_col$f_row").Text
+            }
             '--------------------'
+            $f_row++
+            $t_row++
         }
 
         #-----------------
@@ -267,5 +273,6 @@ try {
    ''
    . CloseEXCEL
 }
+pause
 
 
